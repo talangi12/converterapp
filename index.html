@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Number System Converter</title>
+  <style>
+    :root{
+      --bg:#f6f8fb; --card:#fff; --accent:#2b63ff; --muted:#6b7280; --good:#1dbf75;
+      --panel:#eef6ff; --box:#f3f6f9;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    body{background:var(--bg); margin:0; padding:28px; color:#1f2937}
+    .wrap{max-width:820px; margin:0 auto}
+    header{text-align:center; margin-bottom:12px}
+    header h1{margin:0; font-size:34px; color:var(--accent)}
+    header p{margin:6px 0 18px; color:var(--muted)}
+    .card{background:var(--card); border-radius:12px; padding:16px; box-shadow:0 6px 18px rgba(10,20,50,0.04); margin-bottom:18px}
+    label{display:block; font-weight:700; margin-bottom:6px}
+    .controls{display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap}
+    select,input[type="text"]{padding:10px 12px; border-radius:8px; border:1px solid #e6eef9; font-size:15px; min-width:0}
+    .input-wrap{flex:1; min-width:220px}
+    .btn{background:var(--accent); color:#fff; padding:10px 14px; border-radius:8px; border:none; cursor:pointer}
+    .btn.secondary{background:#fff; color:#334155; border:1px solid #eef4ff}
+    .results{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:16px}
+    .result{background:var(--card); padding:14px; border-radius:12px; border:1px solid #e6eef9}
+    .result.good{border-color:var(--good)}
+    .result h3{margin:0 0 8px; font-size:15px}
+    .box{background:var(--box); padding:12px; border-radius:8px; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace; word-break:break-all}
+    .info{background:var(--panel); padding:12px; border-radius:8px; margin-top:12px}
+    .controls .small{font-size:13px; color:var(--muted)}
+    .actions{display:flex; gap:8px}
+    .copy-btn{padding:8px 10px; border-radius:8px; background:#fff; border:1px solid #e6eef9; cursor:pointer}
+    footer{text-align:center; color:var(--muted); margin-top:18px; font-size:13px}
+    @media(max-width:640px){ .results{grid-template-columns:1fr} .controls{flex-direction:column; align-items:stretch} .actions{justify-content:flex-end} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>📟 Number System Converter</h1>
+      <p>Instantly convert between Binary, Decimal, Hexadecimal and Octal</p>
+    </header>
+
+    <section class="card">
+      <label for="system">Number System</label>
+      <div class="controls">
+        <div style="flex:1">
+          <select id="system" aria-label="Number system">
+            <option value="decimal">Decimal (Base 10)</option>
+            <option value="binary">Binary (Base 2)</option>
+            <option value="hex">Hexadecimal (Base 16)</option>
+            <option value="octal">Octal (Base 8)</option>
+          </select>
+        </div>
+
+        <div class="input-wrap">
+          <label for="value">Input</label>
+          <input id="value" type="text" placeholder="Enter value..." autocomplete="off" />
+        </div>
+
+        <div style="display:flex; gap:8px; align-items:flex-end">
+          <button id="clear" class="btn secondary">⟲ Clear</button>
+        </div>
+      </div>
+
+      <div class="results" style="margin-top:16px;">
+        <div class="result good">
+          <h3>Binary (Base 2)</h3>
+          <div class="box" id="out-binary">0</div>
+          <div class="actions" style="margin-top:8px">
+            <button class="copy-btn" data-target="out-binary">Copy</button>
+          </div>
+        </div>
+
+        <div class="result">
+          <h3>Decimal (Base 10)</h3>
+          <div class="box" id="out-decimal">0</div>
+          <div class="actions" style="margin-top:8px">
+            <button class="copy-btn" data-target="out-decimal">Copy</button>
+          </div>
+        </div>
+
+        <div class="result good">
+          <h3>Hexadecimal (Base 16)</h3>
+          <div class="box" id="out-hex">0</div>
+          <div class="actions" style="margin-top:8px">
+            <button class="copy-btn" data-target="out-hex">Copy</button>
+          </div>
+        </div>
+
+        <div class="result good">
+          <h3>Octal (Base 8)</h3>
+          <div class="box" id="out-octal">0</div>
+          <div class="actions" style="margin-top:8px">
+            <button class="copy-btn" data-target="out-octal">Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="info" style="margin-top:12px">
+        <div style="display:flex; gap:12px; flex-wrap:wrap">
+          <div><strong>Binary</strong> — digits: <code>0</code>, <code>1</code></div>
+          <div><strong>Decimal</strong> — digits: <code>0</code>–<code>9</code></div>
+          <div><strong>Hex</strong> — digits: <code>0</code>–<code>9</code>, <code>A</code>–<code>F</code></div>
+          <div><strong>Octal</strong> — digits: <code>0</code>–<code>7</code></div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Tip: paste a number, pick its base above and results update automatically. Host this file directly on GitHub Pages (push to repo root).
+    </footer>
+  </div>
+
+  <script>
+    // Helper: show text in an element
+    const setText = (id, txt) => document.getElementById(id).textContent = txt;
+
+    // Elements
+    const systemEl = document.getElementById('system');
+    const valueEl = document.getElementById('value');
+    const clearBtn = document.getElementById('clear');
+
+    // outputs
+    const outBin = 'out-binary', outDec = 'out-decimal', outHex = 'out-hex', outOct = 'out-octal';
+
+    // Validation regex by base
+    const validators = {
+      binary: /^[01]+$/,
+      decimal: /^[0-9]+$/,
+      hex: /^[0-9a-fA-F]+$/,
+      octal: /^[0-7]+$/
+    };
+
+    // Convert using BigInt when possible to handle large integers
+    function convertAll(input, from) {
+      input = (input||'').trim();
+      if (!input) {
+        setText(outBin, '0'); setText(outDec,'0'); setText(outHex,'0'); setText(outOct,'0');
+        return;
+      }
+
+      try {
+        // Validate characters for selected base
+        if (!validators[from].test(input)) throw new Error('Invalid digits for base ' + from);
+
+        // Build a BigInt with appropriate prefix
+        let big;
+        if (from === 'binary') {
+          big = BigInt('0b' + input);
+        } else if (from === 'hex') {
+          big = BigInt('0x' + input);
+        } else if (from === 'octal') {
+          big = BigInt('0o' + input);
+        } else { // decimal
+          // Important: BigInt accepts decimal strings
+          big = BigInt(input);
+        }
+
+        // Outputs
+        setText(outDec, big.toString(10));
+        setText(outBin, big.toString(2));
+        setText(outHex, big.toString(16).toUpperCase());
+        setText(outOct, big.toString(8));
+      } catch (err) {
+        // If error show clear Invalid
+        setText(outBin, 'Invalid');
+        setText(outDec, 'Invalid');
+        setText(outHex, 'Invalid');
+        setText(outOct, 'Invalid');
+      }
+    }
+
+    // Wire events
+    valueEl.addEventListener('input', () => convertAll(valueEl.value, systemEl.value));
+    systemEl.addEventListener('change', () => {
+      // reset input when switching system (optional), or keep it
+      // valueEl.value = '';
+      convertAll(valueEl.value, systemEl.value);
+      // change placeholder helpful hint:
+      const ph = { binary:'Enter binary (0 or 1)', decimal:'Enter decimal (0-9)', hex:'Enter hex (0-9, A-F)', octal:'Enter octal (0-7)' };
+      valueEl.placeholder = ph[systemEl.value] || 'Enter value...';
+    });
+
+    clearBtn.addEventListener('click', () => {
+      valueEl.value = '';
+      convertAll('', systemEl.value);
+      valueEl.focus();
+    });
+
+    // Copy buttons
+    document.querySelectorAll('.copy-btn').forEach(b => {
+      b.addEventListener('click', () => {
+        const target = document.getElementById(b.dataset.target).textContent;
+        navigator.clipboard?.writeText(target).then(() => {
+          b.textContent = 'Copied';
+          setTimeout(()=> b.textContent = 'Copy', 900);
+        }).catch(()=> {
+          // fallback
+          alert('Copy failed; manually select & copy the value.');
+        });
+      });
+    });
+
+    // initial convert
+    convertAll('', systemEl.value);
+  </script>
+</body>
+</html>
