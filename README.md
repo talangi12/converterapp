@@ -60,7 +60,7 @@ It was built with simplicity, accuracy, and educational value in mind — ideal 
 
 ##  Conversion Logic
 
-```js
+``js
 // Example: Binary to Decimal
 const binaryToDecimal = (binary) => parseInt(binary, 2);
 
