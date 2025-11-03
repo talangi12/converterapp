@@ -47,15 +47,79 @@ It was built with simplicity, accuracy, and educational value in mind — ideal 
 
 ##  System Architecture
 
-**Architecture Pattern:** Modular React Native structure with Redux Toolkit for global state.
+**Architecture Pattern:** Modular React Native structure using **Redux Toolkit** for predictable state management and separation of concerns.
 
-### Main Components:
-- `ConverterScreen.js` – Handles UI and main conversion logic.  
-- `InputField.js` – Captures user input.  
-- `ResultDisplay.js` – Shows the converted results.  
-- `store.js` – Redux store for managing global state.  
-- `conversionSlice.js` – Reducers and actions for conversion logic.  
-- `App.js` – Entry point integrating navigation and state providers.
+The app follows a **component-based architecture**, where each screen and logic unit is isolated for easy maintenance, scalability, and reusability.
+
+###  Main Components
+
+#### 1. `App.js`
+- Serves as the **entry point** of the application.
+- Initializes navigation and global state providers (Redux Store).
+- Loads the **Splash Screen** during startup and routes the user to the **Converter Screen**.
+- Manages theme and system configurations.
+
+#### 2. `ConverterScreen.js`
+- The **core interface** for all number conversions.
+- Displays input fields, conversion options, and real-time output.
+- Handles user interactions such as input validation and switching conversion modes.
+- Uses Redux actions to update and retrieve data.
+
+#### 3. `InputField.js`
+- A **reusable text input component**.
+- Captures user-entered numbers and validates them based on the selected conversion type (binary, decimal, octal, hexadecimal).
+- Provides instant feedback for invalid characters.
+
+#### 4. `ResultDisplay.js`
+- Dynamically displays the **converted result**.
+- Listens for state changes from Redux and re-renders results in real time.
+- Includes copy and clear buttons for user convenience.
+
+#### 5. `ConversionButtons.js`
+- Contains **interactive buttons** for selecting the conversion mode (e.g., Binary → Decimal, Decimal → Binary, etc.).
+- Uses icons and labels for clarity.
+- Dispatches conversion actions to update the Redux store.
+
+#### 6. `store.js`
+- Configures and initializes the **Redux store**.
+- Combines reducers and middleware (if any).
+- Ensures consistent state management across all app components.
+
+#### 7. `conversionSlice.js`
+- Contains **reducers, actions, and state logic** related to number conversions.
+- Includes helper functions for each conversion type:
+  - `binaryToDecimal()`
+  - `decimalToBinary()`
+  - `decimalToHex()`
+  - `hexToDecimal()`
+  - `decimalToOctal()` etc.
+- Manages the main conversion state and updates the UI accordingly.
+
+#### 8. `SplashScreen.js`
+- Displays the app’s logo and branding on launch.
+- Runs during initialization (2–3 seconds) before redirecting to the main screen.
+- Built with smooth animations for a professional look.
+
+#### 9. `ProfileScreen.js`
+- (Optional feature) Displays basic user profile or app information.
+- Includes feedback and about sections for app contributors.
+
+#### 10. `styles.js`
+- Centralized stylesheet for maintaining **consistent UI design**.
+- Defines fonts, colors, margins, and reusable layout utilities.
+- Uses a “corporate & formal” blue-themed color scheme.
+
+---
+
+###  Data Flow
+
+1. User enters data → **`InputField.js`**  
+2. Input triggers **Redux action** → handled by **`conversionSlice.js`**  
+3. Conversion logic executes → updates global state in **`store.js`**  
+4. UI components (**`ResultDisplay.js`**, **`ConverterScreen.js`**) automatically update with new values.  
+
+This ensures **unidirectional data flow**, reducing complexity and making debugging easier.
+
 
 
 ##  Conversion Logic
