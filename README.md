@@ -109,15 +109,15 @@ npm install
 # Run the app
 npx expo start
 ```
-# Andoid and ios users
-install Expo GO app on your devices and follow the link below to install the app on your device
-https://expo.dev/artifacts/eas/a2SsRKDmvqs5UZzsuPDAEh.aab
 
 ### Production Build
 
 ```bash
 eas build --platform all
 ```
+# Android and ios users
+install Expo GO app on your devices and follow the link below to install the app on your device
+https://expo.dev/artifacts/eas/a2SsRKDmvqs5UZzsuPDAEh.aab
 
 
 ##  Testing
